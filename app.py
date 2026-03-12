@@ -50,6 +50,11 @@ def create_app():
             }
         })
     
+    # Notify on startup
+    from utils.discord_notify import notify_startup
+    port = int(os.environ.get('PORT', 5556))
+    notify_startup(port)
+    
     return app
 
 app = create_app()

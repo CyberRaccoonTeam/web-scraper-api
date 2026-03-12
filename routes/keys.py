@@ -10,6 +10,7 @@ import sqlite3
 from datetime import datetime
 import hashlib
 import secrets
+from utils.discord_notify import notify_new_api_key
 
 keys_bp = Blueprint('keys', __name__, url_prefix='/api')
 
@@ -72,6 +73,10 @@ def create_key():
             (key_hash, name, email, plan, plan_limits.get(plan, 100), datetime.utcnow().isoformat())
         )
         conn.commit()
+        
+        # Send Discord notification
+        notify_new_api_key(name, plan, plan_limits.get(plan, 100))
+        
     except sqlite3.IntegrityError:
         return jsonify({'error': 'Key already exists'}), 409
     finally:
