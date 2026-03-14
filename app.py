@@ -3,7 +3,7 @@ Web Scraper API - Turn websites into structured JSON
 Main Flask Application
 """
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from dotenv import load_dotenv
@@ -36,12 +36,18 @@ def create_app():
     def health():
         return jsonify({'status': 'healthy', 'service': 'Web Scraper API'})
     
-    # Home page
+    # Landing page
+    @app.route('/landing')
+    def landing():
+        return render_template('landing.html')
+    
+    # Home page (API info)
     @app.route('/')
     def index():
         return jsonify({
             'name': 'Web Scraper API',
             'version': '1.0.0',
+            'landing': '/landing',
             'endpoints': {
                 'scrape': 'POST /api/scrape',
                 'keys': 'GET/POST /api/keys',
